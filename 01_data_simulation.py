@@ -18,7 +18,7 @@ num_rows = 50000
 # 2. Base DataFrame Creation
 # Assigning Brands, Regions, Store Age, and Incident Dates with specific probability distributions
 df_raw = spark.range(0, num_rows).select(
-    col(id).alias("claim_id"),
+    col("id").alias("claim_id"),
     expr("CASE WHEN rand() < 0.4 THEN 'Tim Hortons' " +
          "WHEN rand() < 0.7 THEN 'Burger King' " +
          "ELSE 'Popeyes' END").alias("brand"),
