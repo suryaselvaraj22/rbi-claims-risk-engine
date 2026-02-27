@@ -58,13 +58,13 @@ df_final = df_claims.withColumn(
     expr("total_claim_cost > 20000").cast("int") # 1 if litigated (cost > 20k), 0 otherwise
 )
 
-# 5. Save to Delta format
-# We write this to a temporary DBFS path so the next script in our pipeline can read it
-output_path = "dbfs:/tmp/rbi_portfolio/simulated_claims"
-print(f"Saving {num_rows} simulated records to {output_path}...")
+# 5. Save as a Managed Delta Table (Modern Enterprise Standard)
+# Bypassing DBFS completely and saving directly to the default catalog
+table_name = "default.rbi_simulated_claims"
+print(f"Saving {num_rows} simulated records to Delta Table: {table_name}...")
 
 # Mode 'overwrite' ensures we can run this script multiple times safely
-df_final.write.format("delta").mode("overwrite").save(output_path)
+df_final.write.format("delta").mode("overwrite").saveAsTable(table_name)
 
 print("Data simulation complete. Ready for Feature Engineering.")
 
