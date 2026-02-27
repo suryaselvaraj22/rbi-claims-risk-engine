@@ -31,7 +31,7 @@ df_raw = spark.range(0, num_rows).select(
 
 # 3. Add Business Logic for Claim Types and Base Costs
 # This simulates the "Risk Engineering" aspect where certain brands/regions have specific hazards
-df_claims = df.raw.withColumn(
+df_claims = df_raw.withColumn(
     "claim_type",
     expr("CASE " +
          "WHEN brand = 'Tim Hortons' AND rand() < 0.3 THEN 'Hot Liquid Burn' " +
