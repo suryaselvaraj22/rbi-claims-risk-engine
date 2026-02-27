@@ -52,7 +52,7 @@ df_claims = df_raw.withColumn(
 # Real-world data is messy, so we add variance to our costs and flag litigated claims
 df_final = df_claims.withColumn(
     "total_claim_cost",
-    col("intial_reserve") * (lit(1.0) + (rand() - 0.2)) # Add a variance between -20% and +80%
+    col("initial_reserve") * (lit(1.0) + (rand() - 0.2)) # Add a variance between -20% and +80%
 ).withColumn(
     "is_litigated",
     expr("total_claim_cost > 20000").cast("int") # 1 if litigated (cost > 20k), 0 otherwise
