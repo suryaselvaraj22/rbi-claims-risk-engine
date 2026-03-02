@@ -53,8 +53,8 @@ with mlflow.start_run(run_name=run_name) as run:
     mlflow.log_param("train_rows", train_data.count())
 
    # 6. Log Metrics (The "Results")
-   mlflow.log_metric("rmse", final_rmse)
-   mlflow.log_metric("mae", final_mae)
+    mlflow.log_metric("rmse", final_rmse)
+    mlflow.log_metric("mae", final_mae)
 
     # 7. Log and Register the Model (The "Artifact")
     # This saves the actual predictive brain so software engineers can use it via API
