@@ -24,7 +24,7 @@ print(f"Training data count: {train_data.count()}, Testing data count: {test_dat
 # The Actuarial standard for right-skewed insurance costs (cannot be negative)
 print("\nTraining GLM (Gamma) Model...")
 glm = GeneralizedLinearRegression(
-    family="gamma", link="log", featuresCol="features", labelCol="total_claim_cost"
+    family="gamma", link="log", featuresCol="features", labelCol="total_claim_cost",
     maxIter=10, regParam=0.3
 )
 
