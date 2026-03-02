@@ -75,8 +75,7 @@ with mlflow.start_run(run_name=run_name) as run:
         artifact_path="model", 
         registered_model_name=model_name,
         dfs_tmpdir=volume_path,
-        signature=signature,
-        input_example=train_data.limit(5).toPandas() # A sample input for better registry documentation 
+        signature=signature
     )
 
 print("\n" + "=" * 50)
