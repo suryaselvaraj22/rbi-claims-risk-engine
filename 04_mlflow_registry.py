@@ -57,13 +57,19 @@ with mlflow.start_run(run_name=run_name) as run:
     mlflow.log_metric("mae", final_mae)
 
     # 7. Log and Register the Model (The "Artifact")
-    # This saves the actual predictive brain so software engineers can use it via API
+    # In Serverless/Unity Catalog, MLflow needs a secure Volume to temporarily write the model
+    volume_path = "/Volumes/workspace/default/mlflow_tmp"
+    print(f"Ensuring temporary UC Volume exists at {volume_path}...")
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS workspace.default.mlflow_tmp") 
+
     model_name = "RBI_Claims_Predictor"
     print(f"Logging model to MLflow Registry as: {model_name}...")
+
     mlflow.spark.log_model(
         spark_model=gbt_model, 
         artifact_path="model", 
-        registered_model_name=model_name
+        registered_model_name=model_name,
+        dfs_tmpdir=volume_path
     )
 
 print("\n" + "=" * 50)
