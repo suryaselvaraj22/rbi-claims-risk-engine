@@ -4,6 +4,7 @@
 
 import mlflow
 import mlflow.spark
+from mlflow.models import infer_signature
 from pyspark.sql import SparkSession
 from pyspark.ml.regression import GBTRegressor
 from pyspark.ml.evaluation import RegressionEvaluator
@@ -62,6 +63,10 @@ with mlflow.start_run(run_name=run_name) as run:
     print(f"Ensuring temporary UC Volume exists at {volume_path}...")
     spark.sql(f"CREATE VOLUME IF NOT EXISTS workspace.default.mlflow_tmp") 
 
+    # UC Governance Rule: Models MUST have a "Signature" (a schema defining inputs/outputs)
+    print("Inferring model signature for Unity Catalog...")
+    signature = infer_signature(train_data, predictions.select("prediction"))
+
     model_name = "RBI_Claims_Predictor"
     print(f"Logging model to MLflow Registry as: {model_name}...")
 
@@ -69,7 +74,9 @@ with mlflow.start_run(run_name=run_name) as run:
         spark_model=gbt_model, 
         artifact_path="model", 
         registered_model_name=model_name,
-        dfs_tmpdir=volume_path
+        dfs_tmpdir=volume_path,
+        signature=signature,
+        input_example=train_data.limit(5).toPandas() # A sample input for better registry documentation 
     )
 
 print("\n" + "=" * 50)
